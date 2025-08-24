@@ -71,18 +71,10 @@ function ProductTable() {
     );
   };
 
-  const handleProductNameChange = (barcode, newName) => {
-    setProductsInTable(products =>
-      products.map(p =>
-        p.barcode === barcode ? { ...p, product_name: newName } : p
-      )
-    );
-  };
-
   const handleSaveEdit = async (product) => {
     try {
       // تحديث الكمية
-      await updateTemporaryOutputService(product.id, {product_name: product.product_name, quantity: product.quantity, price: product.price });
+      await updateTemporaryOutputService(product.id, {quantity: product.quantity, price: product.price });
 
       window.location.reload();
     } catch (error) {
@@ -151,20 +143,7 @@ function ProductTable() {
                 <tr key={product.barcode}>
                   <td>{product.barcode}</td>
                   <td>{product.product_no}</td>
-                  <td>
-                    { editMode === product.barcode ? (
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={product.product_name}
-                        onChange={e =>
-                          handleProductNameChange(product.barcode, e.target.value)
-                        }
-                      />
-                    ) : (
-                      `${product.product_name}`
-                    )}
-                  </td>
+                  <td>{product.product_name}</td>
                   <td>
                     {editMode === product.barcode ? (
                       <input
