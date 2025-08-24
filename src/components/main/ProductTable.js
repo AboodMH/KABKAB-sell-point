@@ -78,7 +78,7 @@ function ProductTable() {
 
       window.location.reload();
     } catch (error) {
-      alert(error?.response?.data?.message || 'فشل في حفظ التعديلات');
+      alert(error?.response?.data?.error || 'فشل في حفظ التعديلات');
     }
   };
 

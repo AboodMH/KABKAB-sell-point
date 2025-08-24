@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 import { createDailyReportService, getDailyReportDataService } from "../../services/dailyReportServices";
+import { logout } from '../../services/authServices';
 import { Button, Modal } from "react-bootstrap";
+
 
 const CloseDayModal = ({ show, onClose, userName }) => {
   const [formData, setFormData] = useState({
@@ -22,10 +26,23 @@ const CloseDayModal = ({ show, onClose, userName }) => {
   const [errorMsg, setError] = useState("");
   const [successMsg, setSuccess] = useState("");
 
+  const navigate = useNavigate();
+  const { setIsLoggedIn } = useContext(AuthContext);
+
   useEffect(() => {
     if (show) fetchReportData();
     
   }, [show]);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setIsLoggedIn(false);
+      navigate('/login');
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   const fetchReportData = async () => {
     try {
@@ -37,6 +54,8 @@ const CloseDayModal = ({ show, onClose, userName }) => {
         expense,
         withdrawal,
       } = response.data;
+
+
 
       // حساب صافي النقدي
       const netCash = 
@@ -94,7 +113,7 @@ const CloseDayModal = ({ show, onClose, userName }) => {
 
       setSuccess("✅ تم إنشاء التقرير وفتح الملف بنجاح");
 
-      window.location.reload();
+      handleLogout();
     } catch (error) {
       setError(error.response?.data?.message || "حدث خطأ أثناء إنشاء التقرير");
     } finally {
@@ -131,33 +150,33 @@ const CloseDayModal = ({ show, onClose, userName }) => {
             <div className="row">
               <div className="col">
                 <label>💵 نقدي (قبل الخصم)</label>
-                <input type="number" name="cash" className="form-control" value={formData.cash} readOnly />
+                <input type="number" name="cash" className="form-control" value={(formData.cash).toFixed(2)} readOnly />
               </div>
               <div className="col">
                 <label>💳 بطاقة</label>
-                <input type="number" name="card" className="form-control" value={formData.card} readOnly />
+                <input type="number" name="card" className="form-control" value={(formData.card).toFixed(2)} readOnly />
               </div>
             </div>
 
             <div className="row mt-2">
               <div className="col">
                 <label>🚫 إجمالي المرتجعات</label>
-                <input type="number" name="total_outside" className="form-control" value={formData.outside} readOnly />
+                <input type="number" name="total_outside" className="form-control" value={(formData.outside).toFixed(2)} readOnly />
               </div>
               <div className="col">
                 <label>💸 إجمالي المصاريف</label>
-                <input type="number" name="total_expense" className="form-control" value={formData.expense} readOnly />
+                <input type="number" name="total_expense" className="form-control" value={(formData.expense).toFixed(2)} readOnly />
               </div>
               <div className="col">
                 <label>💰 إجمالي السحوبات</label>
-                <input type="number" name="total_withdrawal" className="form-control" value={formData.withdrawal} readOnly />
+                <input type="number" name="total_withdrawal" className="form-control" value={(formData.withdrawal).toFixed(2)} readOnly />
               </div>
             </div>
 
             <div className="row mt-2">
               <div className="col">
                 <label>💵 صافي النقدي بعد الخصومات</label>
-                <input type="number" name="netCash" className="form-control" value={formData.netCash} readOnly />
+                <input type="number" name="netCash" className="form-control" value={(formData.netCash).toFixed(2)} readOnly />
               </div>
             </div>
 
@@ -168,7 +187,7 @@ const CloseDayModal = ({ show, onClose, userName }) => {
               </div>
               <div className="col">
                 <label>🧾 الفرق</label>
-                <input type="number" name="difference" className="form-control" value={formData.difference} readOnly />
+                <input type="number" name="difference" className="form-control" value={(formData.difference).toFixed(2)} readOnly />
               </div>
             </div>
 
