@@ -9,7 +9,6 @@ const ExchangeModal = ({ show, onClose }) => {
   const [newProducts, setNewProducts] = useState([{ product_number: '', quantity: 1, price: 0 }]);
   const [payments, setPayments] = useState([{ method: 'cash', amount_paid: 0 }]);
   const [note, setNote] = useState('');
-  const [discount, setDiscount] = useState(0);
   const [invoiceNo, setInvoiceNo] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -79,7 +78,6 @@ const ExchangeModal = ({ show, onClose }) => {
         setReturnedProducts([{ product_number: '', quantity: 1, price: 0 }]);
         setNewProducts([{ product_number: '', quantity: 1, price: 0 }]);
         setPayments([{ method: 'cash', amount_paid: 0 }]);
-        setDiscount(0);
       }
       
       
@@ -103,7 +101,6 @@ const ExchangeModal = ({ show, onClose }) => {
       returned_products: returnedProducts,
       new_products: newProducts,
       note: note,
-      discount: discount,
       payments: payments
     };
 
@@ -155,6 +152,7 @@ const ExchangeModal = ({ show, onClose }) => {
         window.location.reload();
       }, 500);
     } catch (error) {
+      setLoading(false);
       setErrorMessage(error.message);
       setSuccessMessage('');
     }
@@ -213,7 +211,6 @@ const ExchangeModal = ({ show, onClose }) => {
                 type="number"
                 min={0}
                 placeholder="السعر"
-                readOnly
                 value={item.price}
                 onChange={(e) => handleChange(idx, 'price', e.target.value, returnedProducts, setReturnedProducts)}
               />
@@ -302,18 +299,11 @@ const ExchangeModal = ({ show, onClose }) => {
           </Col>
         </Row>
 
-        {/* الخصم والملاحظات */}
+        {/* الملاحظات*/}
         <Form.Group className="mb-2">
           <Form.Label>ملاحظة</Form.Label>
           <Form.Control type="text" value={note} onChange={(e) => setNote(e.target.value)} />
         </Form.Group>
-
-        <Row className="mb-2">
-          <Col>
-            <Form.Label>الخصم</Form.Label>
-            <Form.Control type="number" value={discount} onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)} />
-          </Col>
-        </Row>
 
         <hr />
 
