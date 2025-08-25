@@ -215,6 +215,15 @@ const ExchangeModal = ({ show, onClose }) => {
                 onChange={(e) => handleChange(idx, 'price', e.target.value, returnedProducts, setReturnedProducts)}
               />
             </Col>
+            <Col>
+              <Form.Control
+                type="number"
+                min={0}
+                placeholder="المجموع"
+                readOnly
+                value={item.price * item.quantity}
+              />
+            </Col>
           </Row>
         ))}
         <Button variant="outline-secondary" size="sm" onClick={() => handleAdd(setReturnedProducts, returnedProducts)}>
@@ -263,7 +272,6 @@ const ExchangeModal = ({ show, onClose }) => {
                 placeholder="المجموع"
                 readOnly
                 value={item.price * item.quantity}
-                onChange={(e) => handleChange(idx, 'totalPrice', e.target.value, newProducts, setNewProducts)}
               />
             </Col>
           </Row>
